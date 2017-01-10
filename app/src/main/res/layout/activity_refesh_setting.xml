@@ -27,10 +27,9 @@
             android:layout_height="wrap_content"
             android:text="出发站"/>
 
-        <EditText
-            android:id="@+id/et_departure"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+        <AutoCompleteTextView
+            android:id="@+id/aTv_departure"
+            style="@style/autoCompleteTextView"/>
     </LinearLayout>
 
     <LinearLayout
@@ -43,10 +42,9 @@
             android:layout_height="wrap_content"
             android:text="到达站"/>
 
-        <EditText
-            android:id="@+id/et_arrival"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+        <AutoCompleteTextView
+            android:id="@+id/aTv_arrival"
+            style="@style/autoCompleteTextView"/>
     </LinearLayout>
 
     <TextView

@@ -16,4 +16,10 @@
         <item name="android:textSize">12sp</item>
     </style>
 
+    <style name="autoCompleteTextView">
+        <item name="android:completionThreshold">1</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
 </resources>
