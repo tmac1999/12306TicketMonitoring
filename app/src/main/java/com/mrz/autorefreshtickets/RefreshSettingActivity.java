@@ -6,9 +6,8 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.CalendarView;
+import android.widget.TextView;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.mrz.autorefreshtickets.presenters.RefreshSettingPresenter;
 import com.mrz.autorefreshtickets.utils.Constants;
 import com.mrz.autorefreshtickets.utils.SharedPUtil;
@@ -26,7 +25,7 @@ public class RefreshSettingActivity extends AppCompatActivity implements Refresh
     private AutoCompleteTextView et_arrival;
     private CalendarView calendar;
     private RefreshSettingPresenter refreshSettingPresenter;
-    private JSONObject jsonObject;
+    private TextView tv_departure_time;
 
     // End Of Content View Elements
 
@@ -35,6 +34,7 @@ public class RefreshSettingActivity extends AppCompatActivity implements Refresh
         et_departure = (AutoCompleteTextView) findViewById(R.id.aTv_departure);
         et_arrival = (AutoCompleteTextView) findViewById(R.id.aTv_arrival);
         calendar = (CalendarView) findViewById(R.id.calendar);
+        tv_departure_time = (TextView) findViewById(R.id.tv_departure_time);
     }
 
     @Override
@@ -47,11 +47,14 @@ public class RefreshSettingActivity extends AppCompatActivity implements Refresh
     }
 
     private void initData() {
+
+        Set<String> keys = Constants.jsonStations.keySet();
+
+
         ArrayList<String> stations = new ArrayList<>();
         et_arrival.setText(SharedPUtil.getInstance().getArrival());
         et_departure.setText(SharedPUtil.getInstance().getDeparture());
-        jsonObject = (JSONObject) JSON.parse(Constants.stations);
-        Set<String> keys = jsonObject.keySet();
+        tv_departure_time.setText("出发日期:" + SharedPUtil.getInstance().getDate());
         for (String key : keys) {
             stations.add(key);
         }
@@ -65,12 +68,14 @@ public class RefreshSettingActivity extends AppCompatActivity implements Refresh
     public void save(View v) {
         String arrival = et_arrival.getText().toString();
         String departure = et_departure.getText().toString();
-        String arrivalShort = null;
-        String departureShort = null;
-        arrivalShort = (String) jsonObject.get(arrival);
-        departureShort = (String) jsonObject.get(departure);
+        calendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+            @Override
+            public void onSelectedDayChange(CalendarView calendarView, int i, int i1, int i2) {
+                ToastUtils.showMessage("calendarView" + i + "==" + i1 + "==" + i2);
+            }
+        });
         String dateFromTimeStampMS = TimeUtils.getDateFromTimeStampMS(calendar.getDate());
-        refreshSettingPresenter.saveRefreshSetting(arrivalShort, departureShort, dateFromTimeStampMS);
+        refreshSettingPresenter.saveRefreshSetting(arrival, departure, dateFromTimeStampMS);
         ToastUtils.showLongMessage("保存成功");
         finish();
     }
