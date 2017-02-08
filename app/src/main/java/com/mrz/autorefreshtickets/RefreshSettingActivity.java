@@ -63,19 +63,33 @@ public class RefreshSettingActivity extends AppCompatActivity implements Refresh
 
         et_departure.setAdapter(arrayAdapter);
         et_arrival.setAdapter(arrayAdapter);
+        calendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+            @Override
+            public void onSelectedDayChange(CalendarView view, int year, int month,
+                                            int dayOfMonth) {
+                int correctMonth = month + 1;
+                date = String.valueOf(year) + "-" + getDoubleDigit(correctMonth) + "-" + getDoubleDigit(dayOfMonth);
+                tv_departure_time.setText("出发日期:" + date);
+            }
+        });
     }
+
+    private String getDoubleDigit(int correctMonth) {
+        if (correctMonth < 10) {
+            return "0" + correctMonth;
+        } else {
+            return String.valueOf(correctMonth);
+        }
+    }
+
+    String date;
 
     public void save(View v) {
         String arrival = et_arrival.getText().toString();
         String departure = et_departure.getText().toString();
-        calendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
-            @Override
-            public void onSelectedDayChange(CalendarView calendarView, int i, int i1, int i2) {
-                ToastUtils.showMessage("calendarView" + i + "==" + i1 + "==" + i2);
-            }
-        });
+
         String dateFromTimeStampMS = TimeUtils.getDateFromTimeStampMS(calendar.getDate());
-        refreshSettingPresenter.saveRefreshSetting(arrival, departure, dateFromTimeStampMS);
+        refreshSettingPresenter.saveRefreshSetting(arrival, departure, date);
         ToastUtils.showLongMessage("保存成功");
         finish();
     }
